@@ -36,11 +36,11 @@ func GenDict(src, clientDst, serverDst string) (err error) {
 		clientFile, serverFile *os.File
 	)
 
-	if clientFile, err = os.Open(clientDst); err != nil {
+	if clientFile, err = os.Create(clientDst); err != nil {
 		return
 	}
 
-	if serverFile, err = os.Open(serverDst); err != nil {
+	if serverFile, err = os.Create(serverDst); err != nil {
 		return
 	}
 
