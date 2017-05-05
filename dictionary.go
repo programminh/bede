@@ -36,11 +36,11 @@ func GenDict(src, clientDst, serverDst string) (err error) {
 		clientFile, serverFile *os.File
 	)
 
-	if clientFile, err = os.Open(filepath.Join(clientDst, "client.xml")); err != nil {
+	if clientFile, err = os.Open(clientDst); err != nil {
 		return
 	}
 
-	if serverFile, err = os.Open(filepath.Join(serverDst, "server.xml")); err != nil {
+	if serverFile, err = os.Open(serverDst); err != nil {
 		return
 	}
 
@@ -67,7 +67,7 @@ func GenDict(src, clientDst, serverDst string) (err error) {
 		return
 	}
 
-	return nil
+	return writeClient(&dict, clientFile)
 }
 
 // writeClient outputs the dictionary to client.xml
