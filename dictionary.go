@@ -54,6 +54,10 @@ func GenDict(src, clientDst, serverDst string) (err error) {
 
 	// Walk the directory, read all the files asynchronously and add it to the dictionary
 	walker := func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
 		if info.IsDir() {
 			return nil
 		}
@@ -64,7 +68,10 @@ func GenDict(src, clientDst, serverDst string) (err error) {
 		return nil
 	}
 
-	filepath.Walk(src, walker)
+	if err = filepath.Walk(src, walker); err != nil {
+		return
+	}
+
 	wg.Wait()
 
 	// Write the server file first since we need all the data
