@@ -20,7 +20,7 @@ type document struct {
 type dictionary struct {
 	XMLName   string `xml:"DICTIONARY"`
 	mu        sync.Mutex
-	Documents []document
+	Documents []document `xml:"DOCUMENT"`
 }
 
 func (dict *dictionary) Add(d document) {
@@ -78,8 +78,8 @@ func GenDict(src, clientDst, serverDst string) (err error) {
 // writeClient outputs the dictionary to client.xml
 // client.xml does not contain the real path to the file therefore we must strip it
 func writeClient(dict *dictionary, f *os.File) (err error) {
-	for _, d := range dict.Documents {
-		d.PathToFile = ""
+	for i, _ := range dict.Documents {
+		dict.Documents[i].PathToFile = ""
 	}
 
 	return xml.NewEncoder(f).Encode(dict)
