@@ -44,6 +44,11 @@ func GenDict(src, clientDst, serverDst string) (err error) {
 		return
 	}
 
+	defer func() {
+		serverFile.Close()
+		clientFile.Close()
+	}()
+
 	wg := sync.WaitGroup{}
 	dict := dictionary{}
 
@@ -91,17 +96,19 @@ func addDocument(path string, dict *dictionary, wg *sync.WaitGroup) {
 
 	// Just skip the file if we can't open it
 	if f, err = os.Open(path); err != nil {
-		log.Println(err)
+		log.Println("can't open:", err)
 		return
 	}
 
 	// Just skip if the file is malformed
 	if err = xml.NewDecoder(f).Decode(&d); err != nil {
-		log.Println(err)
+		log.Println("can't decode", f.Name(), ":", err)
 		return
 	}
 
+	// Let's assume that data is just a string and we want to know the length of the string
 	d.Length = len(d.Data)
+	// Set data to empty string so we don't write it out to the dictionnary
 	d.Data = ""
 	d.PathToFile = f.Name()
 
